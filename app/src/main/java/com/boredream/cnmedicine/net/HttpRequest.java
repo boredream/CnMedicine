@@ -219,24 +219,25 @@ public class HttpRequest {
                 (page - 1) * CommonConstants.COUNT_OF_PAGE, where, null);
     }
 
+
     /**
      * 查询穴位
+     *
+     * @param page
+     * @param jingLuo      经络
+     * @param functionType 功能类型
      */
     public static Observable<ListResponse<Acupoint>> getAcupoint(int page, String jingLuo, String functionType) {
         BmobService service = getApiService();
-
-        String whereJingluo = "{}";
+        String whereJingLuo = "{}";
         if (!TextUtils.isEmpty(jingLuo)) {
-            whereJingluo = "{\"jingLuo\":\"" + jingLuo + "\"}";
+            whereJingLuo = "{\"jingLuo\":\"" + jingLuo + "\"}";
         }
-
         String whereFunctionType = "{}";
         if (!TextUtils.isEmpty(functionType)) {
             whereFunctionType = "{\"functionType\":\"" + functionType + "\"}";
         }
-
-        String where = String.format("{\"$and\":[%s, %s]}", whereJingluo, whereFunctionType);
-
+        String where = String.format("{\"$and\":[%s, %s]}", whereJingLuo, whereFunctionType);
         return service.getAcupoint(CommonConstants.COUNT_OF_PAGE,
                 (page - 1) * CommonConstants.COUNT_OF_PAGE, where, null);
     }

@@ -12,11 +12,11 @@ public class CommonConstants {
     /**
      * SharedPreferences 名称
      */
-    public static final String SP_NAME = "interio_design_config";
+    public static final String SP_NAME = "bore_config";
 
     /**
      * 每页加载的数量
      */
-    public static final int COUNT_OF_PAGE = 10;
+    public static final int COUNT_OF_PAGE = 20;
 
 }
