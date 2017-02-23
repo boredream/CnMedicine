@@ -50,7 +50,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         fragments.add(new AcupointFragment());
         fragments.add(new AcupointFragment());
         fragments.add(new AcupointFragment());
-        fragments.add(new AcupointFragment());
         controller = new FragmentController(this, R.id.fl_content, fragments);
         // 默认选择fragment
         rb1.setChecked(true);

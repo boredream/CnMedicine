@@ -1,7 +1,6 @@
-package com.boredream.cnmedicine.constants;
+package com.boredream.bdcodehelper.constants;
 
 /**
- * TODO replace your app constants
  * 常用常量
  */
 public class CommonConstants {

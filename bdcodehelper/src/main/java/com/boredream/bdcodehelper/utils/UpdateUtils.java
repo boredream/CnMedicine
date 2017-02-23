@@ -1,4 +1,4 @@
-package com.boredream.cnmedicine.utils;
+package com.boredream.bdcodehelper.utils;
 
 
 import android.app.Activity;
@@ -10,17 +10,13 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 
+import com.boredream.bdcodehelper.R;
+import com.boredream.bdcodehelper.base.BoreBaseActivity;
 import com.boredream.bdcodehelper.entity.AppUpdateInfo;
 import com.boredream.bdcodehelper.entity.ListResponse;
+import com.boredream.bdcodehelper.net.HttpRequestProvider;
 import com.boredream.bdcodehelper.net.ObservableDecorator;
-import com.boredream.bdcodehelper.utils.AppUtils;
-import com.boredream.bdcodehelper.utils.DialogUtils;
-import com.boredream.bdcodehelper.utils.NetUtils;
-import com.boredream.bdcodehelper.utils.ToastUtils;
-import com.boredream.cnmedicine.R;
-import com.boredream.cnmedicine.base.BaseActivity;
-import com.boredream.cnmedicine.net.HttpRequest;
-import com.boredream.cnmedicine.net.SimpleSubscriber;
+import com.boredream.bdcodehelper.net.SimpleSubscriber;
 
 import java.util.ArrayList;
 
@@ -41,7 +37,7 @@ public class UpdateUtils {
      * @param context
      * @param isForceCheck 是否强制检测更新, false-WiFi情况下才提示更新,true-无论什么网络环境都会提示更新
      */
-    public static void checkUpdate(final BaseActivity context, final boolean isForceCheck) {
+    public static void checkUpdate(final BoreBaseActivity context, final boolean isForceCheck) {
         if (!NetUtils.isConnected(context)) {
             // 无网络时
             if (isForceCheck) {
@@ -60,7 +56,7 @@ public class UpdateUtils {
             context.showProgressDialog();
         }
 
-        Observable<ListResponse<AppUpdateInfo>> observable = HttpRequest.getApiService().getAppUpdateInfo();
+        Observable<ListResponse<AppUpdateInfo>> observable = HttpRequestProvider.getApiService().getAppUpdateInfo();
         ObservableDecorator.decorate(context, observable).subscribe(
                 new SimpleSubscriber<ListResponse<AppUpdateInfo>>(context) {
                     @Override
@@ -107,7 +103,7 @@ public class UpdateUtils {
     /**
      * 无Wifi状态确认更新对话框
      */
-    private static void showNoWifiConfirmDialog(final BaseActivity context, final AppUpdateInfo updateInfo) {
+    private static void showNoWifiConfirmDialog(final Activity context, final AppUpdateInfo updateInfo) {
         DialogUtils.showCommonDialog(context, "没有wifi连接，是否继续选择更新？",
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -120,7 +116,7 @@ public class UpdateUtils {
     /**
      * 显示更新对话框,包含版本相关信息
      */
-    private static void showUpdateConfirmDialog(final BaseActivity context, final AppUpdateInfo updateInfo) {
+    private static void showUpdateConfirmDialog(final Activity context, final AppUpdateInfo updateInfo) {
         String content = String.format(
                 context.getResources().getString(R.string.update_info),
                 updateInfo.getVersionName(),
@@ -149,7 +145,7 @@ public class UpdateUtils {
      * @param context
      * @param updateInfo
      */
-    private static void startDownload(BaseActivity context, AppUpdateInfo updateInfo) {
+    private static void startDownload(Activity context, AppUpdateInfo updateInfo) {
         int status = getDownloadStatus(context, updateInfo);
         if (status != DOWNLOAD_STATUS_NEED_LOAD) {
             // 不用下载则无需下列操作
@@ -185,7 +181,7 @@ public class UpdateUtils {
      * @param updateInfo
      * @return
      */
-    private static int getDownloadStatus(BaseActivity context, AppUpdateInfo updateInfo) {
+    private static int getDownloadStatus(Activity context, AppUpdateInfo updateInfo) {
         DownloadManager.Query query = new DownloadManager.Query();
         DownloadManager dm = (DownloadManager) context.getSystemService(Activity.DOWNLOAD_SERVICE);
         Cursor c = dm.query(query);

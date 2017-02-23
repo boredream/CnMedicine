@@ -1,13 +1,11 @@
-package com.boredream.cnmedicine.net;
+package com.boredream.bdcodehelper.net;
 
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.boredream.bdcodehelper.net.GlideCircleTransform;
-import com.boredream.bdcodehelper.net.RoundedCornersTransformation;
-import com.boredream.cnmedicine.R;
+import com.boredream.bdcodehelper.R;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;

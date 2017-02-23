@@ -1,4 +1,4 @@
-package com.boredream.cnmedicine.constants;
+package com.boredream.bdcodehelper.constants;
 
 import android.text.TextUtils;
 

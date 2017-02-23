@@ -4,37 +4,29 @@ package com.boredream.cnmedicine.net;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.boredream.bdcodehelper.base.BoreBaseEntity;
+import com.boredream.bdcodehelper.constants.CommonConstants;
 import com.boredream.bdcodehelper.entity.AppUpdateInfo;
 import com.boredream.bdcodehelper.entity.FileUploadResponse;
 import com.boredream.bdcodehelper.entity.ListResponse;
 import com.boredream.bdcodehelper.entity.UpdatePswRequest;
+import com.boredream.bdcodehelper.net.HttpRequestProvider;
 import com.boredream.bdcodehelper.net.ObservableDecorator;
-import com.boredream.cnmedicine.base.BaseEntity;
-import com.boredream.cnmedicine.constants.CommonConstants;
+import com.boredream.bdcodehelper.utils.UserInfoKeeper;
+import com.boredream.cnmedicine.base.BaseApplication;
 import com.boredream.cnmedicine.entity.Acupoint;
 import com.boredream.cnmedicine.entity.User;
-import com.boredream.cnmedicine.utils.UserInfoKeeper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
-import java.io.IOException;
 import java.util.Map;
 
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -47,71 +39,9 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action1;
 
-public class HttpRequest {
-    // Bmob
-//    public static final String HOST = "https://api.bmob.cn";
-//    public static final String FILE_HOST = "http://file.bmob.cn/";
-//
-//    public static final String APP_ID_NAME = "X-Bmob-Application-Id";
-//    public static final String API_KEY_NAME = "X-Bmob-REST-API-Key";
-//    public static final String SESSION_TOKEN_KEY = "X-Bmob-Session-Token";
-//
-//    public static final String APP_ID_VALUE = "06e70a02d2950057ac4c5153460b06b2";
-//    public static final String API_KEY_VALUE = "9d2e47ead033bdbe516b3b7277f31f5a";
+public class HttpRequest extends HttpRequestProvider {
 
-    // LeanCloud
-    public static final String HOST = "https://api.leancloud.cn";
-    public static final String FILE_HOST = "";
-
-    private static final String APP_ID_NAME = "X-LC-Id";
-    private static final String API_KEY_NAME = "X-LC-Key";
-    public static final String SESSION_TOKEN_KEY = "X-LC-Session";
-
-    private static final String APP_ID_VALUE = "YeWYXUgKCPByvToJj3u1mUUw-gzGzoHsz";
-    private static final String API_KEY_VALUE = "Ypx2LgIxvScVwgzPI0UcNSgM";
-
-
-    private static Retrofit retrofit;
-    private static OkHttpClient httpClient;
-
-    public static OkHttpClient getHttpClient() {
-        return httpClient;
-    }
-
-    static {
-        // OkHttpClient
-        httpClient = new OkHttpClient();
-
-        // 统一添加的Header
-        httpClient.networkInterceptors().add(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder()
-                        .addHeader("Content-Type", "application/json")
-                        .addHeader(APP_ID_NAME, APP_ID_VALUE)
-                        .addHeader(API_KEY_NAME, API_KEY_VALUE)
-                        .addHeader(SESSION_TOKEN_KEY, UserInfoKeeper.getToken())
-                        .build();
-                return chain.proceed(request);
-            }
-        });
-
-        // log
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        httpClient.interceptors().add(interceptor);
-
-        // Retrofit
-        retrofit = new Retrofit.Builder()
-                .baseUrl(HOST)
-                .addConverterFactory(GsonConverterFactory.create()) // gson
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create()) // rxjava 响应式编程
-                .client(httpClient)
-                .callbackExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                .build();
-    }
-
-    public interface BmobService {
+    public interface HttpService {
         // 登录用户
         @GET("/1/login")
         Observable<User> login(
@@ -164,7 +94,7 @@ public class HttpRequest {
 
         // 修改用户详情(注意, 提交什么参数修改什么参数)
         @PUT("/1/users/{objectId}")
-        Observable<BaseEntity> updateUserById(
+        Observable<BoreBaseEntity> updateUserById(
                 @Path("objectId") String userId,
                 @Body Map<String, Object> updateInfo);
 
@@ -186,12 +116,12 @@ public class HttpRequest {
 
         // 添加穴位
         @POST("/1/classes/Acupoint")
-        Observable<BaseEntity> addAcupoint(
+        Observable<BoreBaseEntity> addAcupoint(
                 @Body Acupoint entity);
 
         // 修改穴位
         @PUT("/1/classes/Acupoint/{objectId}")
-        Observable<BaseEntity> updateAcupoint(
+        Observable<BoreBaseEntity> updateAcupoint(
                 @Path("objectId") String objectId,
                 @Body Map<String, Object> updateInfo);
 
@@ -204,8 +134,8 @@ public class HttpRequest {
                 @Query("include") String include);
     }
 
-    public static BmobService getApiService() {
-        BmobService service = retrofit.create(BmobService.class);
+    public static HttpService getApiService() {
+        HttpService service = retrofit.create(HttpService.class);
         return service;
     }
 
@@ -213,7 +143,7 @@ public class HttpRequest {
      * 查询穴位
      */
     public static Observable<ListResponse<Acupoint>> getAcupoint(int page) {
-        BmobService service = getApiService();
+        HttpService service = getApiService();
         String where = "{}";
         return service.getAcupoint(CommonConstants.COUNT_OF_PAGE,
                 (page - 1) * CommonConstants.COUNT_OF_PAGE, where, null);
@@ -228,7 +158,7 @@ public class HttpRequest {
      * @param functionType 功能类型
      */
     public static Observable<ListResponse<Acupoint>> getAcupoint(int page, String jingLuo, String functionType) {
-        BmobService service = getApiService();
+        HttpService service = getApiService();
         String whereJingLuo = "{}";
         if (!TextUtils.isEmpty(jingLuo)) {
             whereJingLuo = "{\"jingLuo\":\"" + jingLuo + "\"}";
@@ -251,15 +181,15 @@ public class HttpRequest {
      * @param password 密码
      */
     public static Observable<User> login(String username, String password) {
-        BmobService service = getApiService();
+        HttpService service = getApiService();
         return service.login(username, password)
                 .doOnNext(new Action1<User>() {
                     @Override
                     public void call(User user) {
                         // 保存登录用户数据以及token信息
-                        UserInfoKeeper.setCurrentUser(user);
+                        UserInfoKeeper.getInstance(BaseApplication.getInstance()).setCurrentUser(user);
                         // 保存自动登录使用的信息
-                        UserInfoKeeper.saveLoginData(user.getObjectId(), user.getSessionToken());
+                        UserInfoKeeper.getInstance(BaseApplication.getInstance()).saveLoginData(user.getObjectId(), user.getSessionToken());
                     }
                 });
     }
@@ -270,7 +200,7 @@ public class HttpRequest {
      * @param loginData size为2的数组, 第一个为当前用户id, 第二个为当前用户token
      */
     public static Observable<User> loginByToken(final String[] loginData) {
-        BmobService service = getApiService();
+        HttpService service = getApiService();
         // 这种自动登录方法其实是使用token去再次获取当前账号数据
         return service.getUserById(loginData[0])
                 .doOnNext(new Action1<User>() {
@@ -279,9 +209,9 @@ public class HttpRequest {
                         // TODO 获取用户信息接口不会返回token
                         user.setSessionToken(loginData[1]);
                         // 保存登录用户数据以及token信息
-                        UserInfoKeeper.setCurrentUser(user);
+                        UserInfoKeeper.getInstance(BaseApplication.getInstance()).setCurrentUser(user);
                         // 保存自动登录使用的信息
-                        UserInfoKeeper.saveLoginData(user.getObjectId(), user.getSessionToken());
+                        UserInfoKeeper.getInstance(BaseApplication.getInstance()).saveLoginData(user.getObjectId(), user.getSessionToken());
                     }
                 });
     }
@@ -293,7 +223,7 @@ public class HttpRequest {
      * @param page      页数,从1开始
      */
     public static Observable<ListResponse<User>> getUserByName(String searchKey, int page) {
-        BmobService service = getApiService();
+        HttpService service = getApiService();
         String where = "{\"username\":{\"$regex\":\"" + searchKey + ".*\"}}";
         return service.getUserByName(CommonConstants.COUNT_OF_PAGE,
                 (page - 1) * CommonConstants.COUNT_OF_PAGE, where);
@@ -310,7 +240,7 @@ public class HttpRequest {
      * @param call
      */
     public static void fileUpload(final Context context, Uri uri, int reqW, int reqH, final Subscriber<FileUploadResponse> call) {
-        final BmobService service = getApiService();
+        final HttpService service = getApiService();
         final String filename = "avatar_" + System.currentTimeMillis() + ".jpg";
 
         // 先从本地获取图片,利用Glide压缩图片后获取byte[]

@@ -33,15 +33,10 @@
         <com.boredream.bdcodehelper.view.BottomTabRadioButton
             android:id="@+id/rb2"
             style="@style/RadioButtonBottomTab"
-            android:text="@string/tab2" />
-
-        <com.boredream.bdcodehelper.view.BottomTabRadioButton
-            android:id="@+id/rb3"
-            style="@style/RadioButtonBottomTab"
             android:text="@string/tab3" />
 
         <com.boredream.bdcodehelper.view.BottomTabRadioButton
-            android:id="@+id/rb4"
+            android:id="@+id/rb3"
             style="@style/RadioButtonBottomTab"
             android:text="@string/tab4" />
 
