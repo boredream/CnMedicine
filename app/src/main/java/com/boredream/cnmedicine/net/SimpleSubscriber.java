@@ -1,11 +1,11 @@
-package com.boredream.bdcodehelper.net;
+package com.boredream.cnmedicine.net;
 
 
 import android.content.Context;
 
-import com.boredream.bdcodehelper.constants.ErrorConstants;
-import com.boredream.bdcodehelper.entity.ErrorResponse;
 import com.boredream.bdcodehelper.utils.ToastUtils;
+import com.boredream.cnmedicine.constants.ErrorConstants;
+import com.boredream.cnmedicine.entity.ErrorResponse;
 import com.google.gson.Gson;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.ResponseBody;
@@ -45,6 +45,7 @@ public class SimpleSubscriber<T> extends Subscriber<T> {
                     // 这里的返回内容是Bmob/AVOS/Parse等RestFul API文档中的错误代码和错误信息对象
                     ErrorResponse errorResponse = new Gson().fromJson(
                             responseBody.string(), ErrorResponse.class);
+                    // TODO 统一处理错误,可以根据不同code进行特殊处理,我这里只简单的显示了Toast
                     ToastUtils.showToast(context, ErrorConstants.getErrorMsg(errorResponse.getCode()));
                 } catch (Exception e) {
                     ToastUtils.showToast(context, throwable.getMessage());
