@@ -13,8 +13,14 @@ import android.widget.TextView;
 
 import com.boredream.bdcodehelper.R;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 加载更多装饰适配器,用于包装普通RecyclerView.Adapter增添一个加载更多功能
+ * <p>
+ *     注意：setLayoutManager需要在new LoadMoreAdapter之前调用
+ * </p>
  */
 public class LoadMoreAdapter extends RecyclerView.Adapter {
 
@@ -39,6 +45,8 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
     private int status = STATUS_NONE;
 
     private int ITEM_VIEW_TYPE_FOOTER = 0x10002;
+
+    private Set<Integer> fullSpanViewTypes = new HashSet<>();
 
     /**
      * 正在加载更多中
@@ -66,6 +74,21 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
         mOnLoadMoreListener = onLoadMoreListener;
         mLoadMoreProgressDrawable = loadMoreProgressDrawable;
         setScrollListener();
+        fullSpanViewTypes.add(ITEM_VIEW_TYPE_FOOTER);
+        setGridFullSpan();
+    }
+
+    private void setGridFullSpan() {
+        if (mRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
+            final GridLayoutManager manager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return getLoadMoreSpanSize(position, manager);
+                }
+            });
+            mRecyclerView.setLayoutManager(manager);
+        }
     }
 
     public RecyclerView.Adapter getSrcAdapter() {
@@ -140,24 +163,11 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
             holder.pb_footer_progress.setIndeterminateDrawable(mLoadMoreProgressDrawable);
         }
 
-        // 设置item占满屏幕宽度, 网格列表类型使用
-        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
-        if (layoutManager instanceof StaggeredGridLayoutManager) {
+        // 设置item占满屏幕宽度
+        if (mRecyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
             StaggeredGridLayoutManager.LayoutParams layoutParams =
                     (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
             layoutParams.setFullSpan(true);
-        } else if (layoutManager instanceof GridLayoutManager) {
-            final GridLayoutManager manager = (GridLayoutManager) layoutManager;
-            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    int spanSize = 1;
-                    if (mAdapter.getItemViewType(position) == ITEM_VIEW_TYPE_FOOTER) {
-                        spanSize = manager.getSpanCount();
-                    }
-                    return spanSize;
-                }
-            });
         }
 
         // 根据不同状态显示footer样式
@@ -171,7 +181,8 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
             case STATUS_LOADED_ALL:
                 holder.itemView.setVisibility(View.VISIBLE);
 
-                holder.tv_footer_progress.setVisibility(View.VISIBLE);
+                // FIXME: 2016/12/19
+//                holder.tv_footer_progress.setVisibility(View.VISIBLE);
                 holder.pb_footer_progress.setVisibility(View.GONE);
                 break;
             case STATUS_NONE:
@@ -179,6 +190,18 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
                 holder.itemView.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    public void addFullSpanItemViewType(int viewType) {
+        fullSpanViewTypes.add(viewType);
+    }
+
+    private int getLoadMoreSpanSize(int position, GridLayoutManager manager) {
+        int spanSize = 1;
+        if (fullSpanViewTypes.contains(getItemViewType(position))) {
+            spanSize = manager.getSpanCount();
+        }
+        return spanSize;
     }
 
     /**

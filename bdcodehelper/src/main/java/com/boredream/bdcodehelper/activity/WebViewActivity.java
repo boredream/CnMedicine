@@ -3,20 +3,24 @@ package com.boredream.bdcodehelper.activity;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.boredream.bdcodehelper.R;
 import com.boredream.bdcodehelper.base.BoreBaseActivity;
+import com.boredream.bdcodehelper.utils.AppUtils;
 import com.boredream.bdcodehelper.utils.TitleBuilder;
 
 public class WebViewActivity extends BoreBaseActivity {
 
+    public static final String EXTRA_TITLE = "title";
+    public static final String EXTRA_URL = "url";
+
     private WebView webview;
-    private WebSettings settings;
     private String title;
-    private String url;
     private TitleBuilder titleBuilder;
 
     @Override
@@ -24,8 +28,8 @@ public class WebViewActivity extends BoreBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
 
-        title = getIntent().getStringExtra("title");
-        url = getIntent().getStringExtra("url");
+        title = getIntent().getStringExtra(EXTRA_TITLE);
+        String url = getIntent().getStringExtra(EXTRA_URL);
 
         initView();
 
@@ -36,11 +40,22 @@ public class WebViewActivity extends BoreBaseActivity {
     @SuppressLint("SetJavaScriptEnabled")
     private void initView() {
         titleBuilder = initBackTitle(title);
+        titleBuilder.getRootView().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                String url = webview.getUrl();
+                if(!TextUtils.isEmpty(url)) {
+                    AppUtils.copy2clipboard(WebViewActivity.this, url);
+                    showToast("网址已经复制到剪贴板");
+                }
+                return false;
+            }
+        });
 
         webview = (WebView) findViewById(R.id.webview);
         webview.setWebViewClient(new MyWebClient());
 
-        settings = webview.getSettings();
+        WebSettings settings = webview.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);

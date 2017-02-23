@@ -19,15 +19,16 @@ import com.boredream.bdcodehelper.R;
  */
 public class TitleBuilder {
 
-    private View viewTitle;
+    private View rootView;
     private TextView tvTitle;
     private ImageView ivLeft;
     private ImageView ivRight;
     private TextView tvLeft;
     private TextView tvRight;
+    private TextView tvRight2;
 
-    public View getViewTitle() {
-        return viewTitle;
+    public View getRootView() {
+        return rootView;
     }
 
     public TextView getTvTitle() {
@@ -49,40 +50,45 @@ public class TitleBuilder {
     public TextView getTvRight() {
         return tvRight;
     }
+    public TextView getTvRight2() {
+        return tvRight2;
+    }
 
     /**
      * Activity中使用这个构造方法
      */
     public TitleBuilder(Activity context) {
-        viewTitle = context.findViewById(R.id.rl_titlebar);
-        if (viewTitle == null) {
+        rootView = context.findViewById(R.id.rl_titlebar);
+        if (rootView == null) {
             return;
         }
-        tvTitle = (TextView) viewTitle.findViewById(R.id.titlebar_tv);
-        ivLeft = (ImageView) viewTitle.findViewById(R.id.titlebar_iv_left);
-        ivRight = (ImageView) viewTitle.findViewById(R.id.titlebar_iv_right);
-        tvLeft = (TextView) viewTitle.findViewById(R.id.titlebar_tv_left);
-        tvRight = (TextView) viewTitle.findViewById(R.id.titlebar_tv_right);
+        tvTitle = (TextView) rootView.findViewById(R.id.titlebar_tv);
+        ivLeft = (ImageView) rootView.findViewById(R.id.titlebar_iv_left);
+        ivRight = (ImageView) rootView.findViewById(R.id.titlebar_iv_right);
+        tvLeft = (TextView) rootView.findViewById(R.id.titlebar_tv_left);
+        tvRight = (TextView) rootView.findViewById(R.id.titlebar_tv_right);
+        tvRight2 = (TextView) rootView.findViewById(R.id.titlebar_tv_right2);
     }
 
     /**
      * Fragment中使用这个构造方法
      */
     public TitleBuilder(View context) {
-        viewTitle = context.findViewById(R.id.rl_titlebar);
-        if (viewTitle == null) {
+        rootView = context.findViewById(R.id.rl_titlebar);
+        if (rootView == null) {
             return;
         }
-        tvTitle = (TextView) viewTitle.findViewById(R.id.titlebar_tv);
-        ivLeft = (ImageView) viewTitle.findViewById(R.id.titlebar_iv_left);
-        ivRight = (ImageView) viewTitle.findViewById(R.id.titlebar_iv_right);
-        tvLeft = (TextView) viewTitle.findViewById(R.id.titlebar_tv_left);
-        tvRight = (TextView) viewTitle.findViewById(R.id.titlebar_tv_right);
+        tvTitle = (TextView) rootView.findViewById(R.id.titlebar_tv);
+        ivLeft = (ImageView) rootView.findViewById(R.id.titlebar_iv_left);
+        ivRight = (ImageView) rootView.findViewById(R.id.titlebar_iv_right);
+        tvLeft = (TextView) rootView.findViewById(R.id.titlebar_tv_left);
+        tvRight = (TextView) rootView.findViewById(R.id.titlebar_tv_right);
+        tvRight2 = (TextView) rootView.findViewById(R.id.titlebar_tv_right2);
     }
 
     // title
     public TitleBuilder setTitleBgRes(int resid) {
-        viewTitle.setBackgroundResource(resid);
+        rootView.setBackgroundResource(resid);
         return this;
     }
 
@@ -149,8 +155,23 @@ public class TitleBuilder {
         return this;
     }
 
+    // right2
+    public TitleBuilder setRight2Text(String text) {
+        tvRight2.setVisibility(TextUtils.isEmpty(text) ? View.GONE
+                : View.VISIBLE);
+        tvRight2.setText(text);
+        return this;
+    }
+
+    public TitleBuilder setRight2OnClickListener(OnClickListener listener) {
+        if (tvRight2.getVisibility() == View.VISIBLE) {
+            tvRight2.setOnClickListener(listener);
+        }
+        return this;
+    }
+
     public View build() {
-        return viewTitle;
+        return rootView;
     }
 
 }

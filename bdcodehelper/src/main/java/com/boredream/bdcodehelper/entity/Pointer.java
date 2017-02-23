@@ -12,6 +12,8 @@ public class Pointer implements Serializable {
     protected String objectId;
 
     public Pointer() {
+        this.__type = TYPE;
+        this.className = getClass().getSimpleName();
     }
 
     public Pointer(String className, String objectId) {
@@ -63,5 +65,21 @@ public class Pointer implements Serializable {
             e.printStackTrace();
         }
         return t;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Pointer pointer = (Pointer) o;
+
+        return !(objectId != null ? !objectId.equals(pointer.objectId) : pointer.objectId != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return objectId != null ? objectId.hashCode() : 0;
     }
 }

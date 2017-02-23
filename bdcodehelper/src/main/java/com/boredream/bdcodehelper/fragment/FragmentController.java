@@ -15,6 +15,7 @@ public class FragmentController {
     private int containerId;
     private FragmentManager fm;
     private ArrayList<Fragment> fragments;
+    private int curPosition;
 
     public FragmentController(AppCompatActivity activity, int containerId, ArrayList<Fragment> fragments) {
         this.containerId = containerId;
@@ -32,14 +33,22 @@ public class FragmentController {
     }
 
     public void showFragment(int position) {
-        hideFragments();
-        Fragment fragment = fragments.get(position);
+        curPosition = position;
+
         FragmentTransaction ft = fm.beginTransaction();
-        ft.show(fragment);
+        for (int i = 0; i < fragments.size(); i++) {
+            if (i == position) {
+                // 显示position对应fragment
+                ft.show(fragments.get(i));
+            } else {
+                // hide其他的fragment
+                ft.hide(fragments.get(i));
+            }
+        }
         ft.commit();
     }
 
-    public void hideFragments() {
+    private void hideFragments() {
         FragmentTransaction ft = fm.beginTransaction();
         for (Fragment fragment : fragments) {
             if (fragment != null) {
@@ -49,7 +58,12 @@ public class FragmentController {
         ft.commit();
     }
 
+    public int getCurPosition() {
+        return curPosition;
+    }
+
     public Fragment getFragment(int position) {
         return fragments.get(position);
     }
+
 }

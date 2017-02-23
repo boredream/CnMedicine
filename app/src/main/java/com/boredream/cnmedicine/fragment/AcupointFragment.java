@@ -127,7 +127,8 @@ public class AcupointFragment extends BaseFragment {
         });
 
         View include_refresh_list = View.inflate(activity, R.layout.include_refresh_list, null);
-        multiPageLoadPresent = new MultiPageLoadPresent(activity, include_refresh_list.findViewById(R.id.srl));
+        PageIndex pageIndex = new PageIndex(1, CommonConstants.COUNT_OF_PAGE);
+        multiPageLoadPresent = new MultiPageLoadPresent(activity, include_refresh_list.findViewById(R.id.srl), pageIndex);
 
         //init context view
         include_refresh_list.setLayoutParams(new ViewGroup.LayoutParams(
@@ -163,8 +164,7 @@ public class AcupointFragment extends BaseFragment {
         datas.clear();
 
         AcupointAdapter adapter = new AcupointAdapter(activity, datas);
-        PageIndex pageIndex = new PageIndex(1, CommonConstants.COUNT_OF_PAGE);
-        multiPageLoadPresent.load(adapter, datas, pageIndex,
+        multiPageLoadPresent.load(adapter, datas,
                 new MultiPageRequest<ListResponse<Acupoint>>() {
                     @Override
                     public Observable<ListResponse<Acupoint>> request(int page) {
