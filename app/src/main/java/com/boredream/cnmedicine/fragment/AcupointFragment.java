@@ -13,8 +13,8 @@ import com.boredream.bdcodehelper.entity.PageIndex;
 import com.boredream.bdcodehelper.listener.OnStringSelectListener;
 import com.boredream.bdcodehelper.net.MultiPageRequest;
 import com.boredream.bdcodehelper.present.MultiPageLoadPresent;
-import com.boredream.bdcodehelper.utils.TitleBuilder;
 import com.boredream.bdcodehelper.view.DropDownMenu;
+import com.boredream.bdcodehelper.view.TitlebarView;
 import com.boredream.cnmedicine.R;
 import com.boredream.cnmedicine.adapter.AcupointAdapter;
 import com.boredream.cnmedicine.base.BaseFragment;
@@ -35,17 +35,19 @@ public class AcupointFragment extends BaseFragment {
     private View view;
     private MultiPageLoadPresent multiPageLoadPresent;
     private ArrayList<Acupoint> datas = new ArrayList<>();
+    private TitlebarView titlebar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = View.inflate(activity, R.layout.frag_community, null);
+        view = View.inflate(activity, R.layout.frag_acupoint, null);
         initView();
         initData();
         return view;
     }
 
     private void initView() {
-        new TitleBuilder(view).setTitleText(getString(R.string.tab2));
+        titlebar = (TitlebarView) view.findViewById(R.id.title);
+        titlebar.setTitleText(getString(R.string.tab2));
 
         initDropDownMenu();
     }

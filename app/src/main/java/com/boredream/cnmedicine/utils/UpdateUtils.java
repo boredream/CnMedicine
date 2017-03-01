@@ -165,7 +165,7 @@ public class UpdateUtils {
         DownloadManager.Request r = new DownloadManager.Request(mUri);
 
         // set request property
-        r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, updateInfo.getDownloadTitle());
+        r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, updateInfo.getAppName());
         r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
         // create manager
@@ -198,7 +198,7 @@ public class UpdateUtils {
         do {
             int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
             String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
-            if (title.equals(updateInfo.getDownloadTitle())) {
+            if (title.equals(updateInfo.getAppName())) {
                 // 如果下载列表中文件是当前版本应用，则继续判断下载状态
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
                     // 如果已经下载，返回状态，同时直接提示安装

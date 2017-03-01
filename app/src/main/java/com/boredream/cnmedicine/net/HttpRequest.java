@@ -48,16 +48,6 @@ import rx.Subscriber;
 import rx.functions.Action1;
 
 public class HttpRequest {
-    // Bmob
-//    public static final String HOST = "https://api.bmob.cn";
-//    public static final String FILE_HOST = "http://file.bmob.cn/";
-//
-//    public static final String APP_ID_NAME = "X-Bmob-Application-Id";
-//    public static final String API_KEY_NAME = "X-Bmob-REST-API-Key";
-//    public static final String SESSION_TOKEN_KEY = "X-Bmob-Session-Token";
-//
-//    public static final String APP_ID_VALUE = "06e70a02d2950057ac4c5153460b06b2";
-//    public static final String API_KEY_VALUE = "9d2e47ead033bdbe516b3b7277f31f5a";
 
     // LeanCloud
     public static final String HOST = "https://api.leancloud.cn";

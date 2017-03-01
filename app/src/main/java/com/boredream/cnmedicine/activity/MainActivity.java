@@ -35,7 +35,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         }
 
         initView();
-        initData();
+        initData(savedInstanceState);
     }
 
     private void initView() {
@@ -45,13 +45,16 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         rg_bottom_tab.setOnCheckedChangeListener(this);
     }
 
-    private void initData() {
-        ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(new AcupointFragment());
-        fragments.add(new AcupointFragment());
-        fragments.add(new AcupointFragment());
-        fragments.add(new AcupointFragment());
-        controller = new FragmentController(this, R.id.fl_content, fragments);
+    private void initData(Bundle savedInstanceState) {
+        if(savedInstanceState == null) {
+            ArrayList<Fragment> fragments = new ArrayList<>();
+            fragments.add(new AcupointFragment());
+            fragments.add(new AcupointFragment());
+            fragments.add(new AcupointFragment());
+            fragments.add(new AcupointFragment());
+            controller = new FragmentController(this, R.id.fl_content, fragments);
+        }
+
         // 默认选择fragment
         rb1.setChecked(true);
         controller.showFragment(0);
