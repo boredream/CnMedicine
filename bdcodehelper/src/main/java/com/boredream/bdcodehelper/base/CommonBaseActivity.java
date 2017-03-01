@@ -8,14 +8,12 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import com.boredream.bdcodehelper.R;
 import com.boredream.bdcodehelper.utils.DialogUtils;
 import com.boredream.bdcodehelper.utils.ToastUtils;
 
-public class BoreBaseActivity extends AppCompatActivity {
+public class CommonBaseActivity extends AppCompatActivity {
 
     protected String TAG;
     private Dialog progressDialog;
@@ -36,25 +34,6 @@ public class BoreBaseActivity extends AppCompatActivity {
     protected void setScreenOrientation() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
-
-    /**
-     * fixme
-     * 左侧有返回键的标题栏
-     * <p>如果在此基础上还要加其他内容,比如右侧有文字按钮,可以获取该方法返回值继续设置其他内容
-     *
-     * @param title 标题
-     */
-//    protected TitleBuilder initBackTitle(String title) {
-//        return new TitleBuilder(this)
-//                .setTitleText(title)
-//                .setLeftImage(R.mipmap.ic_back)
-//                .setLeftOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        finish();
-//                    }
-//                });
-//    }
 
     /**
      * 跳转页面,无extra简易型

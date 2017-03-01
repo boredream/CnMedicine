@@ -25,7 +25,6 @@ public class TitleBuilder {
     private ImageView ivRight;
     private TextView tvLeft;
     private TextView tvRight;
-    private TextView tvRight2;
 
     public View getRootView() {
         return rootView;
@@ -50,9 +49,6 @@ public class TitleBuilder {
     public TextView getTvRight() {
         return tvRight;
     }
-    public TextView getTvRight2() {
-        return tvRight2;
-    }
 
     /**
      * Activity中使用这个构造方法
@@ -67,7 +63,6 @@ public class TitleBuilder {
         ivRight = (ImageView) rootView.findViewById(R.id.titlebar_iv_right);
         tvLeft = (TextView) rootView.findViewById(R.id.titlebar_tv_left);
         tvRight = (TextView) rootView.findViewById(R.id.titlebar_tv_right);
-        tvRight2 = (TextView) rootView.findViewById(R.id.titlebar_tv_right2);
     }
 
     /**
@@ -83,7 +78,6 @@ public class TitleBuilder {
         ivRight = (ImageView) rootView.findViewById(R.id.titlebar_iv_right);
         tvLeft = (TextView) rootView.findViewById(R.id.titlebar_tv_left);
         tvRight = (TextView) rootView.findViewById(R.id.titlebar_tv_right);
-        tvRight2 = (TextView) rootView.findViewById(R.id.titlebar_tv_right2);
     }
 
     // title
@@ -151,21 +145,6 @@ public class TitleBuilder {
             ivRight.setOnClickListener(listener);
         } else if (tvRight.getVisibility() == View.VISIBLE) {
             tvRight.setOnClickListener(listener);
-        }
-        return this;
-    }
-
-    // right2
-    public TitleBuilder setRight2Text(String text) {
-        tvRight2.setVisibility(TextUtils.isEmpty(text) ? View.GONE
-                : View.VISIBLE);
-        tvRight2.setText(text);
-        return this;
-    }
-
-    public TitleBuilder setRight2OnClickListener(OnClickListener listener) {
-        if (tvRight2.getVisibility() == View.VISIBLE) {
-            tvRight2.setOnClickListener(listener);
         }
         return this;
     }

@@ -181,8 +181,7 @@ public class LoadMoreAdapter extends RecyclerView.Adapter {
             case STATUS_LOADED_ALL:
                 holder.itemView.setVisibility(View.VISIBLE);
 
-                // FIXME: 2016/12/19
-//                holder.tv_footer_progress.setVisibility(View.VISIBLE);
+                holder.tv_footer_progress.setVisibility(View.VISIBLE);
                 holder.pb_footer_progress.setVisibility(View.GONE);
                 break;
             case STATUS_NONE:
